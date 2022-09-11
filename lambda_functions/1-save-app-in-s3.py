@@ -38,6 +38,9 @@ with zipfile.ZipFile('app.zip', 'w') as zip_function:
 # save app.zip in the bucket
 s3_client.upload_file('app.zip', bucket_name, 'app.zip')
 print(f'File app.zip uploaded')
+# delete app.zip
+os.remove('app.zip')
+
 
 # %%
 # check all files in the bucket
