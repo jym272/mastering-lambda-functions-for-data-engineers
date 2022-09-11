@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AWSLambdaDeployerStateService">
+    <option name="flags">
+      <Flags>
+        <option name="flyway" value="1" />
+        <option name="init" value="1" />
+      </Flags>
+    </option>
+    <option name="lastUsedAWSProfile" value="jorge-admin" />
+    <option name="profiledState">
+      <map>
+        <entry key="aws-graph-dev">
+          <value>
+            <ProfiledState>
+              <option name="profileName" value="aws-graph-dev" />
+            </ProfiledState>
+          </value>
+        </entry>
+        <entry key="jorge-admin">
+          <value>
+            <ProfiledState>
+              <option name="profileName" value="jorge-admin" />
+            </ProfiledState>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="selectedCLIProfiles">
+      <set>
+        <option value="aws-graph-dev" />
+        <option value="default" />
+        <option value="jorge-admin" />
+      </set>
+    </option>
+  </component>
+</project>
