@@ -61,21 +61,47 @@ lambda_client.update_function_code(
     S3Key='app.zip',
     Publish=True
 )
-# %% --------------------------------------------- (UPDATE POLICIES) Update policies to lambda function
+# %%
 # iam role of the lambda function
-
+iam_client = boto3.client('iam')
 role = lambda_client.get_function_configuration(FunctionName=lambda_function_name)['Role']
 role
 
 # %%
+# list all policies of the lambda function
+for policy in iam_client.list_attached_role_policies(RoleName=role.split('/')[-1])['AttachedPolicies']:
+    print(policy['PolicyName'])
+
+# %% -----------------add AmazonS3ReadOnlyAccess------------ (UPDATE POLICIES) Update policies to lambda function
 # add permissions to list buckets of s3 to the lambda function
-iam_client = boto3.client('iam')
 iam_client.attach_role_policy(
     RoleName=role.split('/')[-1],
     PolicyArn='arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess'
 )
-
 # %%
+# add env variables to the lambda function 'bucket_name': 'lambda-deploy-app-from-pycharm'
+lambda_client.update_function_configuration(
+    FunctionName=lambda_function_name,
+    Environment={
+        'Variables': {
+            'BUCKET_NAME': bucket_name
+        }
+    }
+)
+# %%
+# increase memory of the lambda function to 512 MB
+lambda_client.update_function_configuration(
+    FunctionName=lambda_function_name,
+    MemorySize=512
+)
+# %%
+# increase timeout of the lambda function to 10 seconds
+lambda_client.update_function_configuration(
+    FunctionName=lambda_function_name,
+    Timeout=10
+)
+
+
 
 
 
