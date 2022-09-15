@@ -1,7 +1,7 @@
 # %%
 import boto3
 import os
-
+import requests
 # %%
 aws_profile = os.environ.get('AWS_PROFILE')
 if aws_profile is None:
@@ -39,3 +39,11 @@ response = s3_client.get_object(Bucket=bucket_name, Key='hello-world')
 bytes_body = response['Body'].read()
 string_body = bytes_body.decode('utf-8')
 string_body
+# %%
+file_name = '2015-01-01-15.json.gz'
+url = f'https://data.gharchive.org/{file_name}'
+response = requests.get(url)
+# %%
+# put bytes object
+s3_client.put_object(Bucket=bucket_name, Key=file_name, Body=response.content)
+# %%

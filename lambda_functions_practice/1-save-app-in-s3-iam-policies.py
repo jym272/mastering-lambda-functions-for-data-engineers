@@ -32,8 +32,9 @@ else:
 
 # %% --------------------------------------------- (REDEPLOY app.py 1/2) Zip app.py into app.zip
 # zip app.py ito app.zip
+lambda_client = boto3.client('lambda')
 with zipfile.ZipFile('app.zip', 'w') as zip_function:
-    zip_function.write('lambda_functions/app.py', 'app.py')
+    zip_function.write('lambda_functions_practice/app.py', 'app.py')
 
 # save app.zip in the bucket
 s3_client.upload_file('app.zip', bucket_name, 'app.zip')
@@ -48,7 +49,6 @@ for file in s3_client.list_objects(Bucket=bucket_name)['Contents']:
     print(file['Key'])
 
 # %%
-lambda_client = boto3.client('lambda')
 # list all lambda functions
 for function in lambda_client.list_functions()['Functions']:
     print(function['FunctionName'])

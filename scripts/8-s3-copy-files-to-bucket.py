@@ -32,7 +32,7 @@ else:
 # list of files in the bucket
 list_of_names = []
 for file in s3_client.list_objects(Bucket=bucket_name)['Contents']:
-    print(file['Key'])
+    print(f'{file["LastModified"]} \t {file["Key"]}')
     list_of_names.append(file['Key'])
 # %%
 
