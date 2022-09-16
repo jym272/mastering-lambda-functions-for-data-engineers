@@ -3,17 +3,18 @@ import boto3
 import os
 import zipfile
 
+from utils.aws import aws_init_profile
+
 # %%
-aws_profile = os.environ.get('AWS_PROFILE')
-if aws_profile is None:
-    os.environ['AWS_PROFILE'] = 'jorge-admin'
-    aws_profile = os.environ.get('AWS_PROFILE')
+aws_init_profile()
 
 # %%
 s3_client = boto3.client('s3')
 region = 'sa-east-1'
 location = {'LocationConstraint': region}
 bucket_name = 'lambda-deploy-app-from-pycharm'
+lambda_function_name = 'masterLambdaGHArchive'
+
 # print the names of the buckets
 for bucket in s3_client.list_buckets()['Buckets']:
     print(bucket['Name'])
@@ -54,7 +55,6 @@ for function in lambda_client.list_functions()['Functions']:
     print(function['FunctionName'])
 # %% --------------------------------------------- (REDEPLOY app.py 2/2) Modify a lambda function
 # modify a lambda function
-lambda_function_name = 'masterLambdaGHArchive'
 lambda_client.update_function_code(
     FunctionName=lambda_function_name,
     S3Bucket=bucket_name,
@@ -100,6 +100,28 @@ lambda_client.update_function_configuration(
     FunctionName=lambda_function_name,
     Timeout=10
 )
+
+# %%   ----------------------------------- Check layer/script.py
+# list of layers
+layer_version_arn = ''
+for layer in lambda_client.list_layers()['Layers']:
+    print(layer)
+    if layer['LayerName'] == 'myLayer':
+        layer_version_arn = layer['LatestMatchingVersion']['LayerVersionArn']
+        break
+print(layer_version_arn)
+# %%
+# add layer to the lambda function
+lambda_client.update_function_configuration(
+    FunctionName=lambda_function_name,
+    Layers=[
+        layer_version_arn,
+    ]
+)
+
+# %%
+
+
 
 
 

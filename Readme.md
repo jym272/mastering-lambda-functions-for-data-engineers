@@ -1,9 +1,6 @@
 ### Configuración Environment
-- Recordar setear el _venv_ con pycharm o vía consola.
-`ctrl+alt+s` -> project->Python Interpreter -> Add Interpreter -> Add Local Interpreter -> (seleccionar uno que exista o crear un nuevo)
-
-- Creando un nuevo _venv_ consola: `python3.** -m venv my-venv`
-
+- Creando un nuevo _venv_ consola: `python3.9 -m venv my-venv`
+- Configurar pycharm para usar el _venv/bin/python3.9_ como intérprete
 ### Instalación
 - Instalar dependencias: `pip install -r requirements.txt`
 - Chequear que se haya instalado bien: `pip freeze` `pip list` 

@@ -3,6 +3,9 @@ import json
 import boto3
 import os
 import subprocess
+import requests
+import pandas as pd
+
 
 # event
 # {
@@ -14,6 +17,7 @@ def check_pip_list():
     print('pip list:')
     pip_list = subprocess.run(['pip', 'list'], capture_output=True)
     print(pip_list.stdout.decode('utf-8'))
+
 
 def print_env_variable(key):
     print(f'{key}: {os.environ[key]}')
