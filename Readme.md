@@ -16,3 +16,6 @@
 
 ### env vars
 - recordar activar en el config del main y en la consola de python las variables de entorno que se vayan a usar(alt+ctrl+s) como AWS_PROFILE
+- Si se ejecuta desde el terminal  (para que python encuentre los módulos)
+  - export AWS_PROFILE=jorge-admin
+  - export PYTHONPATH=\`pwd`

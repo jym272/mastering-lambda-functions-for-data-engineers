@@ -1,16 +1,12 @@
 # %%
 import boto3
-import os
 from datetime import datetime
 from datetime import timedelta
 import requests
+from utils.aws import aws_init_profile
 
 # %%
-aws_profile = os.environ.get('AWS_PROFILE')
-if aws_profile is None:
-    os.environ['AWS_PROFILE'] = 'jorge-admin'
-    aws_profile = os.environ.get('AWS_PROFILE')
-print(aws_profile)
+aws_init_profile()
 # %%
 dynamodb = boto3.resource('dynamodb')
 # list of all tables

@@ -35,7 +35,7 @@ else:
 # zip app.py ito app.zip
 lambda_client = boto3.client('lambda')
 with zipfile.ZipFile('app.zip', 'w') as zip_function:
-    zip_function.write('lambda_functions_practice/app.py', 'app.py')
+    zip_function.write('lambda_functions/app.py', 'app.py')
 
 # save app.zip in the bucket
 s3_client.upload_file('app.zip', bucket_name, 'app.zip')
@@ -79,12 +79,34 @@ iam_client.attach_role_policy(
     PolicyArn='arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess'
 )
 # %%
-# add env variables to the lambda function 'bucket_name': 'lambda-deploy-app-from-pycharm'
+# add permission to dynamodb:GetItem to the lambda function
+iam_client.attach_role_policy(
+    RoleName=role.split('/')[-1],
+    PolicyArn='arn:aws:iam::aws:policy/AmazonDynamoDBReadOnlyAccess'
+)
+# %%
+# add permission to putobject in s3 to the lambda function
+iam_client.attach_role_policy(
+    RoleName=role.split('/')[-1],
+    PolicyArn='arn:aws:iam::aws:policy/AmazonS3FullAccess'
+)
+# %%
+# add permission to UpdateItem in dynamoDb to the lambda function
+iam_client.attach_role_policy(
+    RoleName=role.split('/')[-1],
+    PolicyArn='arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess'
+)
+# %%
+# configurar environment var en lambda
+# 'GH_ACTIVITY_INGEST' = 'ghactivity-ingest'
+# 'AWS_PROFILE' = 'jorge-admin'
+# 'BUCKET_NAME' = 'master-lambda-gharchive'
 lambda_client.update_function_configuration(
     FunctionName=lambda_function_name,
     Environment={
         'Variables': {
-            'BUCKET_NAME': bucket_name
+            'GH_ACTIVITY_INGEST': 'ghactivity-ingest',
+            'BUCKET_NAME': 'master-lambda-gharchive'
         }
     }
 )
@@ -104,9 +126,10 @@ lambda_client.update_function_configuration(
 # %%   ----------------------------------- Check layer/script.py
 # list of layers
 layer_version_arn = ''
+layer_name= 'myLayer'
 for layer in lambda_client.list_layers()['Layers']:
     print(layer)
-    if layer['LayerName'] == 'myLayer':
+    if layer['LayerName'] == layer_name:
         layer_version_arn = layer['LatestMatchingVersion']['LayerVersionArn']
         break
 print(layer_version_arn)
@@ -120,10 +143,10 @@ lambda_client.update_function_configuration(
 )
 
 # %%
-
-
-
-
-
-
-
+# delete version of the layer from  1 to 12
+for version in range(1, 13):
+    lambda_client.delete_layer_version(
+        LayerName=layer_name,
+        VersionNumber=version
+    )
+print('Versions from 1 to 12 deleted')
